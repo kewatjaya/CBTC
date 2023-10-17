@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo List App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body{
+            background-color: rgb(249, 238, 191);
+        }
+        .completed {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="center-align">To-do List</h1>
+        <div class="row">
+            <div class="col s12 m6 offset-m3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="input-field">
+                            <input type="text" id="new-task" class="validate">
+                            <label for="new-task">Enter a task</label>
+                        </div>
+                        <a class="waves-effect waves-light btn" onclick="addTask()">Add Task</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m6 offset-m3">
+                <h2>Tasks</h2>
+                <ul id="todo-list" class="collection"></ul>
+                <h2>Completed Tasks</h2>
+                <ul id="completed-list" class="collection"></ul>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            M.AutoInit();
+        });
+
+        function addTask() {
+            const taskText = document.getElementById("new-task").value;
+            if (taskText === "") {
+                M.toast({html: 'Please enter a task!', classes: 'rounded red'});
+                return;
+            }
+
+            const timestamp = new Date().toLocaleString();
+
+            const listItem = document.createElement("li");
+            listItem.className = "collection-item";
+            listItem.innerHTML = `
+                <span>${taskText}</span>
+                <span>${timestamp}</span>
+                <a class="waves-effect waves-light btn green" onclick="completeTask(this)">Complete</a>
+            `;
+
+            document.getElementById("todo-list").appendChild(listItem);
+            document.getElementById("new-task").value = "";
+        }
+
+        function completeTask(button) {
+            const listItem = button.parentNode;
+            const taskText = listItem.querySelector("span").innerText;
+            const timestamp = listItem.querySelector("span:last-child").innerText;
+
+            listItem.classList.add("completed");
+            listItem.querySelector("a").remove();
+
+            const completedListItem = document.createElement("li");
+            completedListItem.className = "collection-item";
+            completedListItem.innerHTML = `
+                <span class="completed">${taskText}</span>
+                <span class="completed">${timestamp}</span>
+            `;
+
+            document.getElementById("completed-list").appendChild(completedListItem);
+        }
+    </script>
+</body>
+</html>
